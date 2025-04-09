@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <title>Books</title>
+</head>
+<body>
+<div class="container mt-4">
+    <h2>Список книг</h2>
+    <form class="row g-3 mb-3" method="get" th:action="@{/books}">
+        <div class="col-md-3">
+            <label>
+                <input type="text" class="form-control" name="title" th:value="${title}" placeholder="Title"/>
+            </label>
+        </div>
+        <div class="col-md-3">
+            <label>
+                <input type="text" class="form-control" name="brand" th:value="${brand}" placeholder="Brand"/>
+            </label>
+        </div>
+        <div class="col-md-2">
+            <label>
+                <input type="text" class="form-control" name="year" th:value="${year}" placeholder="Year"/>
+            </label>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Фильтровать</button>
+        </div>
+    </form>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Brand</th>
+            <th>Year</th>
+            <th>Stock</th>
+            <th>Price</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.id}"></td>
+            <td th:text="${book.title}"></td>
+            <td th:text="${book.brand}"></td>
+            <td th:text="${book.year}"></td>
+            <td th:text="${book.stock}"></td>
+            <td th:text="${book.price}"></td>
+            <td>
+                <form th:action="@{'/books/edit/' + ${book.id}}" method="get">
+                    <button class="btn btn-secondary btn-sm">Редактировать</button>
+                </form>
+                <form th:action="@{'/books/delete/' + ${book.id}}" method="post">
+                    <button class="btn btn-danger btn-sm">Удалить</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <nav>
+        <ul class="pagination">
+            <li class="page-item" th:each="i : ${#numbers.sequence(0, books.totalPages - 1)}">
+                <a class="page-link" th:href="@{'/books?page=' + ${i} + '&title=' + ${title} + '&brand=' + ${brand} + '&year=' + ${year}}" th:text="${i + 1}"></a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>
